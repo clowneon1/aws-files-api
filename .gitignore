@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### cred
+!**/src/resources/application.yml
