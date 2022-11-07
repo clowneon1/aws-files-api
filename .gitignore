@@ -33,4 +33,4 @@ build/
 .vscode/
 
 ### cred
-!**/src/resources/application.yml
+!**/src/main/resources/application.yml
