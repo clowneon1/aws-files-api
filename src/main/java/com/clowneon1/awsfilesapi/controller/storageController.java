@@ -1,6 +1,9 @@
 package com.clowneon1.awsfilesapi.controller;
 
+import com.clowneon1.awsfilesapi.model.User;
 import com.clowneon1.awsfilesapi.service.StorageService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,8 +20,11 @@ public class storageController {
     private StorageService service;
 
     @PostMapping("/upload")
-    public ResponseEntity<String> uploadFile(@RequestParam(value = "file") MultipartFile file){
-        return new ResponseEntity<>(service.uploadFile(file), HttpStatus.OK);
+    public ResponseEntity<String> uploadFile(@RequestParam(value = "file") MultipartFile file,
+                                             @RequestParam(value = "user") String userdata) throws JsonProcessingException {
+
+        User user = new ObjectMapper().readValue(userdata, User.class);
+        return new ResponseEntity<>(service.uploadFile(file,user), HttpStatus.OK);
     }
 
     @GetMapping("/download/{filename}")

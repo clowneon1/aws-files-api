@@ -7,6 +7,7 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.amazonaws.util.IOUtils;
+import com.clowneon1.awsfilesapi.model.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -31,10 +32,12 @@ public class StorageService {
         this.s3Client = s3Client;
     }
 
-    public String uploadFile(MultipartFile file) throws AmazonServiceException {
+    public String uploadFile(MultipartFile file, User user) throws AmazonServiceException {
 
         Map<String,String> metaList = new HashMap<>();
-        metaList.put("x-amz-meta-name", "yashraj");
+        metaList.put("name", user.getName());
+        metaList.put("email",user.getEmail());
+        metaList.put("contact-info", user.getContactInfo());
 
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setUserMetadata(metaList);
@@ -45,11 +48,6 @@ public class StorageService {
         s3Client.putObject(new PutObjectRequest(bucketName,filename,fileObj).withMetadata(metadata));
         fileObj.delete();
         return "File uploaded : " + filename;
-
-//        PutObjectRequest objectRequest = new PutObjectRequest(bucketName,filename,fileObj);
-//        objectRequest.setMetadata(metadata);
-//
-//        s3Client.putObject(objectRequest);
     }
 
     public byte[] downloadFile(String filename){
